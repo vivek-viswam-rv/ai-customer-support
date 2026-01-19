@@ -1,4 +1,4 @@
-from fastapi import Request, Response, status
+from fastapi import Request, status
 from fastapi.responses import PlainTextResponse
 
 from .constants import MAX_REQUESTS, TIME_WINDOW
