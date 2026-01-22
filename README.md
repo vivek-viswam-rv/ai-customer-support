@@ -1,4 +1,4 @@
-# AI Customer Support
+# AI-Powered Customer Support
 
 ### Work in progress!!!
 
