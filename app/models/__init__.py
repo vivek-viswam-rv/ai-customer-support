@@ -1,1 +1,1 @@
-from .auth_token import AuthToken
+from .api_key import ApiKey
