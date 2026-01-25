@@ -10,7 +10,7 @@ from pinecone import Pinecone, ServerlessSpec
 
 from app.dependencies import authentication
 from app.routes import POLICY_REINDEX
-from .constants import PINECONE_DIM, PINECONE_METRIC
+from .constants import EMBEDDING_MODEL, PINECONE_DIM, PINECONE_METRIC
 
 load_dotenv()
 
@@ -20,7 +20,7 @@ router = APIRouter(dependencies=[Depends(authentication)])
 def reindex():
     ids, documents = _get_policy_documents()
     index = _get_policy_index()
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
     vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
     vector_store.add_documents(documents=documents, ids=ids)
