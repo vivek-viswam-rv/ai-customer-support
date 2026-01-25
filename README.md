@@ -8,6 +8,8 @@ This project is an LLM-powered customer support agent designed to automate the h
 - Authentication dependency.
 - Sliding-window, counter-based API rate limiter implemented as FastAPI dependency with Redis for request tracking.
 - Policy reindexing endpoint.
+  - Tested AWS S3 connectivity.
+  - Tested FastAPI -> S3 ->FastAPI -> Pinecone -> FastAPI pipeline. Must try Amazon Bedrock when free!
 
 Note: Might convert authentication and rate limiter dependencies to middlewares, based on the requirement.
 
