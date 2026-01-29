@@ -1,10 +1,16 @@
 import { defineConfig } from "vite";
+import path from "path";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import jsconfigPaths from "vite-jsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig({
   root: "./ui",
-  plugins: [react(), tailwindcss(), jsconfigPaths()],
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./ui/src"),
+      "shadcn": path.resolve(__dirname, "./ui/src/components/shadcn"),
+    },
+  },
 });
