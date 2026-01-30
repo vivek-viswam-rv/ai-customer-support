@@ -18,6 +18,7 @@ Note: Might convert authentication and rate limiter dependencies to middlewares,
 
 Technologies involved:
 - FastAPI
+- React
 - Redis
 - SQLAlchemy
 - LangChain
