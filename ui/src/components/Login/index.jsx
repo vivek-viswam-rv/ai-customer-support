@@ -10,11 +10,9 @@ function Login() {
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-standard px-4">
-      <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-8 shadow-lg pb-14">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Login</h1>
-          <p className="mt-1 text-gray-600">Sign in to your account</p>
-        </div>
+      <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-10 shadow-lg">
+        <h1 className="text-3xl font-bold text-gray-900 mb-1">Sign in</h1>
+        <p className="text-gray-600">Sign in to your account</p>
 
         <Formik
           initialValues={FORM_INITIAL_VALUES}
@@ -22,15 +20,15 @@ function Login() {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, touched }) => (
-            <Form className="space-y-6">
-              <div>
+            <Form>
+              <div className="space-y-1.5 mb-4">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Email Address
                 </label>
-                <div>
+                <div className="h-16">
                   <Field
                     id="email"
                     name="email"
@@ -42,20 +40,18 @@ function Login() {
                     }`}
                     placeholder="you@example.com"
                   />
-                    <div className="mt-1 text-error">
-                      { touched.email && errors.email }
-                    </div>
+                  <div className="mt-1 text-error">
+                    {touched.email && errors.email}
+                  </div>
                 </div>
-              </div>
 
-              <div>
                 <label
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Password
                 </label>
-                <div>
+                <div className="h-16">
                   <Field
                     id="password"
                     name="password"
@@ -67,9 +63,9 @@ function Login() {
                     }`}
                     placeholder="Password"
                   />
-                    <div className="mt-1 text-error">
-                      { touched.password && errors.password }
-                    </div>
+                  <div className="mt-1 text-error">
+                    { touched.password && errors.password }
+                  </div>
                 </div>
               </div>
 
@@ -78,7 +74,7 @@ function Login() {
                 disabled={isSubmitting}
                 className="w-full button-primary"
               >
-                {isSubmitting ? "Signing in..." : "Sign In"}
+                {isSubmitting ? "Signing in..." : "Sign in"}
               </Button>
             </Form>
           )}
