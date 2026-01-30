@@ -26,7 +26,7 @@ function Login() {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 required"
                 >
-                  Email Address
+                  Email
                 </label>
                 <div className="h-16">
                   <Field
