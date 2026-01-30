@@ -6,20 +6,16 @@ import {
   DESCRIPTION_ROWS,
 } from "./constants";
 
-function UserInput() {
-  const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    console.log("Problem submitted:", values);
-    // Handle submission here
-    setSubmitting(false);
-    // Optionally reset after submission
-    // resetForm();
+function UserInput({ setProblemDescription }) {
+  const handleSubmit = (values) => {
+    setProblemDescription(values.problem);
   };
-
   return (
     <div className="w-full max-w-3xl mx-auto p-6">
       <Formik
         initialValues={FORM_INITIAL_VALUES}
         validationSchema={FORM_SCHEMA}
+        validateOnBlur={false}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, errors, touched, resetForm }) => (
