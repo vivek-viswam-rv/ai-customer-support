@@ -14,10 +14,10 @@ export const ROUTES = [
   },
   {
     path: LOGIN_ROUTE,
-    element: Login(),
+    element: <Login />,
   },
   {
     path: "*",
-    element: NotFound(),
+    element: <NotFound />,
   },
 ];
