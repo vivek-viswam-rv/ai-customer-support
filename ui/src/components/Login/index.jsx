@@ -24,7 +24,7 @@ function Login() {
               <div className="space-y-1.5 mb-4">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 required"
                 >
                   Email Address
                 </label>
@@ -47,7 +47,7 @@ function Login() {
 
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 required"
                 >
                   Password
                 </label>
@@ -64,7 +64,7 @@ function Login() {
                     placeholder="Password"
                   />
                   <div className="mt-1 text-error">
-                    { touched.password && errors.password }
+                    {touched.password && errors.password}
                   </div>
                 </div>
               </div>
