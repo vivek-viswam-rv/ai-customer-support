@@ -16,6 +16,7 @@ function Login() {
 
         <Formik
           initialValues={FORM_INITIAL_VALUES}
+          validateOnBlur={false}
           validationSchema={LOGIN_SCHEMA}
           onSubmit={handleSubmit}
         >
