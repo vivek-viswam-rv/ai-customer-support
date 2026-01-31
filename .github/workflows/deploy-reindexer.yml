@@ -9,8 +9,8 @@ on:
       - ".github/workflows/deploy-reindexer.yml"
 
 permissions:
-  id-token: write   # This is required for OIDC authentication
-  contents: read    # This is required to checkout the repository
+  id-token: write
+  contents: read
 
 jobs:
   deploy:
@@ -21,11 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -38,5 +33,5 @@ jobs:
         with:
           function-name: reindexer
           code-artifacts-dir: ./lambda
-          handler: lambda_function.lambda_handler
+          handler: reindexer.lambda_handler
           runtime: python3.13
