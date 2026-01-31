@@ -6,10 +6,10 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone, ServerlessSpec
 
+
 EMBEDDING_MODEL = "text-embedding-3-small"
 PINECONE_DIM = 1536
 PINECONE_METRIC = "cosine"
-
 
 def lambda_handler(event, _):
     record = event["Records"][0]
@@ -19,8 +19,6 @@ def lambda_handler(event, _):
     print(f"Processing S3 upload: s3://{bucket}/{key}")
     reindex(bucket, key)
 
-
-
 def reindex(bucket, key):
     ids, documents = _get_documents(bucket, key)
     index = _get_pinecone_index()
@@ -28,7 +26,6 @@ def reindex(bucket, key):
     vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
     vector_store.add_documents(documents=documents, ids=ids)
-
 
 def _get_documents(bucket, key):
     loader = S3FileLoader(
@@ -39,7 +36,6 @@ def _get_documents(bucket, key):
     )
 
     return [str(uuid4())], loader.load()
-
 
 def _get_pinecone_index():
     INDEX_NAME = os.getenv("PINECONE_INDEX")
