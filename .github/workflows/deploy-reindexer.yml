@@ -3,7 +3,7 @@ name: Deploy reindexer lambda
 on:
   push:
     branches:
-      - main
+      - lambda-production
     paths:
       - "lambda/**"
       - ".github/workflows/deploy-reindexer.yml"
