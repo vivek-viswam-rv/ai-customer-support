@@ -10,6 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./ui/src"),
+      "components": path.resolve(__dirname, "./ui/src/components"),
       "shadcn": path.resolve(__dirname, "./ui/src/components/shadcn"),
       "utils": path.resolve(__dirname, "./ui/src/utils"),
     },
