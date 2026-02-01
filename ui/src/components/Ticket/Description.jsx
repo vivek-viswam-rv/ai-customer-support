@@ -3,16 +3,18 @@ const Description = () => (
     <p className="text-gray-600">
       Describe your issue below, and our AI assistant will help resolve it.
     </p>
-    <p className="text-gray-500  max-w-2xl text-sm">
-      Write this like an email to Amazon Customer Support about an order issue.
-      Below is a list of your past purchases:
-      <br />
+    <div className="text-gray-500  max-w-2xl text-sm">
+      <p>
+        Write this like an email to Amazon Customer Support about an order
+        issue. Below is a list of your past purchases:
+        <br />
+      </p>
       <ol className="pl-5 list-decimal">
         <li>Wireless Mouse</li>
         <li>Bluetooth Headphones</li>
         <li>USB-C Charger</li>
       </ol>
-    </p>
+    </div>
   </div>
 );
 
