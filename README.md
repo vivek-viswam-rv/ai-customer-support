@@ -49,6 +49,7 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 - **Shadcn/ui** - Component library
 - **Axios** - API requests
 - **Ramda** - Functional library of JavaScript
+- **TanStack Query (React Query)** - Data fetching
 - **Formik & Yup** - Form management and validation
 
 ## Tech Stack
