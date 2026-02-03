@@ -1,53 +1,43 @@
 import { Formik, Form, Field } from "formik";
 import { Button } from "shadcn/button";
-import { FORM_SCHEMA, DESCRIPTION_ROWS } from "./constants";
-import { useEffect } from "react";
-import { useRef } from "react";
 
-function UserInput({
-  problemDescription,
-  setProblemDescription,
-  setShouldShowResponse,
-}) {
-  const inputRef = useRef(null);
+import { useCreateTicket } from "hooks/reactQuery/useTicketsApi";
 
-  useEffect(() => {
-    inputRef.current.setSelectionRange(
-      inputRef.current.value.length,
-      inputRef.current.value.length
-    );
-  }, []);
+import {
+  FORM_SCHEMA,
+  DESCRIPTION_ROWS,
+  FORM_INITIAL_VALUES,
+} from "./constants";
+
+function UserInput() {
+  const { isSubmitting, mutate: createTicket } = useCreateTicket();
 
   return (
     <div className="w-full max-w-3xl mx-auto p-6">
       <Formik
-        initialValues={{ problem: problemDescription }}
+        initialValues={FORM_INITIAL_VALUES}
         validationSchema={FORM_SCHEMA}
         validateOnBlur={false}
-        onSubmit={(values) => {
-          setProblemDescription(values.problem);
-          setShouldShowResponse(true);
-        }}
+        onSubmit={createTicket}
       >
-        {({ isSubmitting, errors, touched, resetForm }) => (
+        {({ errors, touched, resetForm }) => (
           <Form className="space-y-1">
             <div>
               <label
-                htmlFor="problem"
+                htmlFor="description"
                 className="block text-sm font-medium text-gray-700 mb-2 required"
               >
                 Describe your problem
               </label>
-              <Field name="problem">
+              <Field name="description">
                 {({ field }) => (
                   <textarea
                     {...field}
-                    id="problem"
+                    id="description"
                     autoFocus
-                    ref={inputRef}
                     rows={DESCRIPTION_ROWS}
                     className={`w-full rounded-lg border px-4 py-3 text-gray-900 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none ${
-                      touched.problem && errors.problem
+                      touched.description && errors.description
                         ? "border-red-500"
                         : "border-gray-300"
                     }`}
@@ -56,8 +46,8 @@ function UserInput({
                 )}
               </Field>
               <div className="h-2">
-                {touched.problem && errors.problem && (
-                  <div className="text-error">{errors.problem}</div>
+                {touched.description && errors.description && (
+                  <div className="text-error">{errors.description}</div>
                 )}
               </div>
             </div>

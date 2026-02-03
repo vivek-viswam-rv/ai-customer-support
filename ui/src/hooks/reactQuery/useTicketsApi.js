@@ -3,11 +3,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import ticketsApi from "apis/tickets";
 
 export const useFetchTicket = id =>
-  useQuery([QUERY_KEYS.TICKETS, id], {
-    queryFn: () => ticketsApi.fetch(id),
-  });
+  useQuery([QUERY_KEYS.TICKETS, id], () => ticketsApi.fetch(id));
 
 export const useCreateTicket = onSuccessHandler =>
-  useMutation(ticketsApi.create, {
+  useMutation({
+    mutationFn: ticketsApi.create,
     onSuccess: onSuccessHandler,
   });
