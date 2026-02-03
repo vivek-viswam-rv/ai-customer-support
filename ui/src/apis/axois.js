@@ -37,11 +37,13 @@ const handleErrorResponse = (error) => {
   if (error.response?.status === 401) {
     resetApiKey();
     clearLocalStorageCredentials();
-    toast.error(error.response?.data?.error);
+    toast.error(error.response?.data?.detail);
 
-    window.location.href = LOGIN_ROUTE;
+    if (window.location.pathname !== LOGIN_ROUTE){
+      window.location.href = LOGIN_ROUTE;
+    }
   } else {
-    toast.error(error.response?.data?.error || error.message);
+    toast.error(error.response?.data?.detail || error.message);
   }
 
   return Promise.reject(error);
