@@ -10,6 +10,7 @@ class User(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True, default=gen_uuid)
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(200), nullable=False)
     api_key: Mapped[str] = mapped_column(String(36), unique=True, index=True, nullable=False, default=gen_uuid)
 
     tickets: Mapped[list[Ticket]] = relationship(back_populates="author")
