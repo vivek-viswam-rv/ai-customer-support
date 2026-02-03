@@ -5,7 +5,9 @@
         "@/*": ["./ui/src/*"],
         "components/*": ["./ui/src/components/*"],
         "shadcn/*": ["./ui/src/components/shadcn/*"],
-        "utils/*": ["./ui/src/utils/*"]
+        "utils/*": ["./ui/src/utils/*"],
+        "hooks/*": ["./ui/src/hooks/*"],
+        "apis/*": ["./ui/src/apis/*"]
     }
   }
 }
