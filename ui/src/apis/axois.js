@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { LOGIN_ROUTE } from "components/routeConstants";
 import { getFromLocalStorage, clearLocalStorageCredentials } from "utils/storage";
 
-axios.defaults.baseURL = "http://localhost:8000/";
+axios.defaults.baseURL = "http://localhost:8000/api/";
 
 const setAuthHeaders = () => {
   const apiKey = getFromLocalStorage("apiKey");

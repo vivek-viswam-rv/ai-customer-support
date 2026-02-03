@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const fetch = id => axios.get("/api/tickets", { params: { id } });
-const create = payload => axios.post("/api/tickets", payload);
+const fetch = id => axios.get("/tickets", { params: { id } });
+const create = payload => axios.post("/tickets", payload);
 
 export const ticketsApi = {
     fetch,
