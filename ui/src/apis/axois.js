@@ -24,9 +24,9 @@ const resetApiKey = () =>
 
 const handleSuccessResponse = response => {
   if (response) {
-    response.success = response.status === 200;
-    if (response.data.notice) {
-      toast.success(response.data.notice);
+    response.success = response.status === 200 || response.status === 201;
+    if (response.data.message) {
+      toast.success(response.data.message);
     }
   }
 
