@@ -19,12 +19,12 @@ def create_user(user: UserCreate, db: Annotated[Session, Depends(get_db)]):
     db.add(new_user)
     db.commit()
 
-    return {"message": "User created successfully"}
+    return {"message": "Sign up successful!"}
 
 @router.post("/signin", status_code=status.HTTP_200_OK)
 def signin_user(user_details: UserSignIn, db: Annotated[Session, Depends(get_db)]):
     user = db.query(User).filter(User.email == user_details.email).first()
     if not user or not verify_password(user_details.password, user.password_hash):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password!")
 
     return UserSignInResponse(email=user.email, api_key=user.api_key)
