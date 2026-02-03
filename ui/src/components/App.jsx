@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { LOGIN_ROUTE, ROUTES } from "./routeConstants";
+import { SIGNIN_ROUTE, ROUTES } from "./routeConstants";
 import { getFromLocalStorage } from "utils/storage";
 import { registerIntercepts, setAuthHeaders } from "apis/axois";
 
@@ -16,8 +16,8 @@ function App() {
     setAuthHeaders();
   },[]);
 
-  if (!isLoggedIn && !pathname.includes(LOGIN_ROUTE)) {
-    router.navigate(LOGIN_ROUTE);
+  if (!isLoggedIn && !pathname.includes(SIGNIN_ROUTE)) {
+    router.navigate(SIGNIN_ROUTE);
   }
 
   return <RouterProvider router={router} />;

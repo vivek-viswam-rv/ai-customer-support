@@ -1,12 +1,19 @@
 import { Formik, Form, Field } from "formik";
-import { Button } from "shadcn/button";
-import { FORM_INITIAL_VALUES, LOGIN_SCHEMA } from "./constants";
 
-function Login() {
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log("Login attempt:", values);
-    setSubmitting(false);
-  };
+import { Button } from "shadcn/button";
+import { useSignInUser } from "hooks/reactQuery/useUsersApi";
+import { setToLocalStorage } from "utils/storage";
+
+import { FORM_INITIAL_VALUES, LOGIN_SCHEMA } from "./constants";
+import { TICKET_ROUTE } from "../routeConstants";
+
+function SignIn() {
+  const { isSubmitting, mutate: signInUser } = useSignInUser(
+    ({ data: { api_key } }) => {
+      setToLocalStorage("apiKey", api_key);
+      window.location.href = TICKET_ROUTE;
+    }
+  );
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-standard px-4">
@@ -18,9 +25,9 @@ function Login() {
           initialValues={FORM_INITIAL_VALUES}
           validateOnBlur={false}
           validationSchema={LOGIN_SCHEMA}
-          onSubmit={handleSubmit}
+          onSubmit={signInUser}
         >
-          {({ isSubmitting, errors, touched }) => (
+          {({ errors, touched }) => (
             <Form>
               <div className="space-y-1.5 mb-4">
                 <label
@@ -85,4 +92,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignIn;

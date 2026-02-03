@@ -2,7 +2,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 
-import { LOGIN_ROUTE } from "components/routeConstants";
+import { SIGNIN_ROUTE } from "components/routeConstants";
 import { getFromLocalStorage, clearLocalStorageCredentials } from "utils/storage";
 
 axios.defaults.baseURL = "http://localhost:8000/api/";
@@ -39,8 +39,8 @@ const handleErrorResponse = (error) => {
     clearLocalStorageCredentials();
     toast.error(error.response?.data?.detail);
 
-    if (window.location.pathname !== LOGIN_ROUTE){
-      window.location.href = LOGIN_ROUTE;
+    if (window.location.pathname !== SIGNIN_ROUTE){
+      window.location.href = SIGNIN_ROUTE;
     }
   } else {
     toast.error(error.response?.data?.detail || error.message);

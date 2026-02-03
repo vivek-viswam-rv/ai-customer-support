@@ -3,11 +3,11 @@ import NotFound from "./commons/NotFound";
 
 import { redirect } from "react-router-dom";
 import Ticket from "./Ticket";
-import Login from "./Login";
+import SignIn from "./SignIn";
 
 export const HOME_ROUTE = "/";
 export const TICKET_ROUTE = "/ticket";
-export const LOGIN_ROUTE = "/login";
+export const SIGNIN_ROUTE = "/signin";
 
 export const ROUTES = [
   {
@@ -15,8 +15,8 @@ export const ROUTES = [
     loader: () => redirect(TICKET_ROUTE),
   },
   {
-    path: LOGIN_ROUTE,
-    element: <Login />,
+    path: SIGNIN_ROUTE,
+    element: <SignIn />,
   },
   {
     path: TICKET_ROUTE,
