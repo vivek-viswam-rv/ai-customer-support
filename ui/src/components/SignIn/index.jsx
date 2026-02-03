@@ -1,35 +1,58 @@
 import { Formik, Form, Field } from "formik";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "shadcn/button";
-import { useSignInUser } from "hooks/reactQuery/useUsersApi";
+import { useCreateUser, useSignInUser } from "hooks/reactQuery/useUsersApi";
 import { setToLocalStorage } from "utils/storage";
 
 import { FORM_INITIAL_VALUES, LOGIN_SCHEMA } from "./constants";
-import { TICKET_ROUTE } from "../routeConstants";
+import { SIGNIN_ROUTE, SIGNUP_ROUTE, TICKET_ROUTE } from "../routeConstants";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 function SignIn() {
-  const { isSubmitting, mutate: signInUser } = useSignInUser(
+  const pathname = window.location.pathname;
+  const isLoginPage = pathname === SIGNIN_ROUTE;
+  const loadingText = isLoginPage ? "Signing in..." : "Signing up...";
+  const buttonText = isLoginPage ? "Sign in" : "Sign up";
+
+  const formRef = useRef();
+  const emailRef = useRef();
+  const navigate = useNavigate();
+  const { isSubmitting: isSigningIn, mutate: signInUser } = useSignInUser(
     ({ data: { api_key } }) => {
       setToLocalStorage("apiKey", api_key);
-      window.location.href = TICKET_ROUTE;
+      window.location.replace(TICKET_ROUTE);
     }
   );
+
+  const { isSubmitting: isSigningUp, mutate: signUpUser } = useCreateUser(() =>
+    navigate(SIGNIN_ROUTE, { replace: true })
+  );
+
+  useEffect(() => {
+    formRef.current?.resetForm();
+    emailRef.current?.focus();
+  }, [isLoginPage]);
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-standard px-4">
       <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-10 shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-900 mb-1">Sign in</h1>
-        <p className="text-gray-600">Sign in to your account</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-1">{buttonText}</h1>
+        <p className="text-gray-600">
+          {buttonText} to {isLoginPage ? "your" : "create a new"} account
+        </p>
 
         <Formik
           initialValues={FORM_INITIAL_VALUES}
           validateOnBlur={false}
           validationSchema={LOGIN_SCHEMA}
-          onSubmit={signInUser}
+          onSubmit={isLoginPage ? signInUser : signUpUser}
+          innerRef={formRef}
         >
           {({ errors, touched }) => (
             <Form>
-              <div className="space-y-1.5 mb-4">
+              <div className="space-y-1.5 mb-2">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 required"
@@ -41,6 +64,7 @@ function SignIn() {
                     id="email"
                     name="email"
                     type="email"
+                    innerRef={emailRef}
                     className={`mt-1 block w-full rounded-lg border px-4 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
                       touched.email && errors.email
                         ? "border-red-500"
@@ -79,14 +103,38 @@ function SignIn() {
 
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSigningIn || isSigningUp}
                 className="w-full button-primary"
               >
-                {isSubmitting ? "Signing in..." : "Sign in"}
+                {isSigningIn || isSigningUp ? loadingText : buttonText}
               </Button>
             </Form>
           )}
         </Formik>
+
+        {isLoginPage ? (
+          <p className="text-sm">
+            Don't have an account?{" "}
+            <Link
+              to={SIGNUP_ROUTE}
+              replace
+              className="text-blue-600 hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
+        ) : (
+          <p className="text-sm">
+            Already have an account?{" "}
+            <Link
+              to={SIGNIN_ROUTE}
+              replace
+              className="text-blue-600 hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-
 import NotFound from "./commons/NotFound";
 
 import { redirect } from "react-router-dom";
@@ -8,6 +7,7 @@ import SignIn from "./SignIn";
 export const HOME_ROUTE = "/";
 export const TICKET_ROUTE = "/ticket";
 export const SIGNIN_ROUTE = "/signin";
+export const SIGNUP_ROUTE = "/signup";
 
 export const ROUTES = [
   {
@@ -16,6 +16,10 @@ export const ROUTES = [
   },
   {
     path: SIGNIN_ROUTE,
+    element: <SignIn />,
+  },
+  {
+    path: SIGNUP_ROUTE,
     element: <SignIn />,
   },
   {
