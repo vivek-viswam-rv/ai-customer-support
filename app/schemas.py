@@ -12,7 +12,7 @@ class TicketResponse(BaseModel):
 
 class UserCreate(BaseModel):
     email: EmailStr
-    password: Annotated[str, Field(min_length=8, max_length=100)]
+    password: Annotated[str, Field(min_length=6, max_length=100)]
 
 class UserSignIn(UserCreate):
     pass
