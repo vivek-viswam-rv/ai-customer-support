@@ -1,12 +1,14 @@
 from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.schemas import TicketCreate, TicketResponse
 from app.database import get_db
-from app.models import Ticket, User
 from app.dependencies import api_authentication
+from app.models import Ticket, User
+from app.schemas import TicketCreate, TicketResponse
 
 router = APIRouter(prefix="/tickets")
 
@@ -14,7 +16,7 @@ router = APIRouter(prefix="/tickets")
 def get_ticket(ticket_id, db: Annotated[Session, Depends(get_db)], user: Annotated[User, Depends(api_authentication)]):
     ticket = db.execute(select(Ticket).where(Ticket.id == ticket_id, Ticket.user_id == user.id)).scalars().first()
     if not ticket:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found!")
 
     return {
         "id": ticket.id,
@@ -31,4 +33,8 @@ def create_ticket(ticket: TicketCreate,
     db.add(new_ticket)
     db.commit()
 
-    return {"message": "Ticket created successfully"}
+    return {
+        "message": "Ticket created successfully!",
+        "ticket_id": new_ticket.id
+        }
+
