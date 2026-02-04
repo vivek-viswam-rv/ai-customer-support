@@ -1,5 +1,6 @@
-import { QUERY_KEYS } from "@/constants/query";
 import { useMutation, useQuery } from "@tanstack/react-query";
+
+import { QUERY_KEYS } from "constants/query";
 import ticketsApi from "apis/tickets";
 
 export const useFetchTicket = id =>
@@ -13,4 +14,3 @@ export const useCreateTicket = onSuccessHandler =>
     mutationFn: ticketsApi.create,
     onSuccess: onSuccessHandler,
   });
-
