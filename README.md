@@ -47,12 +47,15 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 - **React 19** - UI framework
 - **Tailwind CSS** - Utility-first CSS
 - **Shadcn/ui** - Component library
+- **Axios** - API requests
+- **Ramda** - Functional library of JavaScript
+- **TanStack Query (React Query)** - Data fetching
 - **Formik & Yup** - Form management and validation
 
 ## Tech Stack
 
 - **Backend**: FastAPI, SQLAlchemy, LangChain
-- **Frontend**: React, Tailwind CSS, Shadcn/ui
+- **Frontend**: React, Tailwind CSS, Shadcn/ui, Axios, Ramda
 - **Database**: Redis, Pinecone
 - **Cloud**: AWS S3
 - **LLM**: OpenAI

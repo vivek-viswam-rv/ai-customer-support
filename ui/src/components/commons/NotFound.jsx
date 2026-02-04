@@ -7,7 +7,7 @@ import {
   EmptyTitle,
 } from "shadcn/empty";
 import { LogIn } from "lucide-react";
-import { LOGIN_ROUTE } from "../routeConstants";
+import { TICKETS_ROUTE } from "../routeConstants";
 
 export function NotFound() {
   return (
@@ -19,17 +19,17 @@ export function NotFound() {
             Page not found!
           </EmptyTitle>
           <EmptyDescription className="text-slate-400">
-            The page you're looking for doesn't exist or has been moved.
+            The page you're looking for doesn't exist.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
-              onClick={() => (window.location.href = LOGIN_ROUTE)}
+              onClick={() => (window.location.href = TICKETS_ROUTE)}
               className="flex items-center gap-2 button-primary"
             >
               <LogIn className="size-4" />
-              Go to login page
+              Go to tickets page
             </Button>
           </div>
         </EmptyContent>

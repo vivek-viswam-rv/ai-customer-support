@@ -1,0 +1,37 @@
+name: Deploy reindexer lambda
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "lambda/**"
+      - ".github/workflows/deploy-reindexer.yml"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.LAMBDA_EXECUTION_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy Lambda Function
+        uses: aws-actions/aws-lambda-deploy@v1.1.0
+        with:
+          function-name: reindexer
+          code-artifacts-dir: ./lambda
+          handler: reindexer.lambda_handler
+          runtime: python3.13
