@@ -15,6 +15,7 @@ export default defineConfig({
       "utils": path.resolve(__dirname, "./ui/src/utils"),
       "hooks": path.resolve(__dirname, "./ui/src/hooks"),
       "apis": path.resolve(__dirname, "./ui/src/apis"),
+      "constants": path.resolve(__dirname, "./ui/src/constants"),
     },
   },
 });

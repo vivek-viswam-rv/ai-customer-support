@@ -7,7 +7,8 @@
         "shadcn/*": ["./ui/src/components/shadcn/*"],
         "utils/*": ["./ui/src/utils/*"],
         "hooks/*": ["./ui/src/hooks/*"],
-        "apis/*": ["./ui/src/apis/*"]
+        "apis/*": ["./ui/src/apis/*"],
+        "constants/*": ["./ui/src/constants/*"]
     }
   }
 }
