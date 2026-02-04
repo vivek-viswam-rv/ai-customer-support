@@ -1,6 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
-import { Button } from "shadcn/button";
 
+import { Button } from "shadcn/button";
 import { useCreateTicket } from "hooks/reactQuery/useTicketsApi";
 
 import {
@@ -8,9 +9,15 @@ import {
   DESCRIPTION_ROWS,
   FORM_INITIAL_VALUES,
 } from "./constants";
+import { TICKETS_RESPONSE_ROUTE } from "../routeConstants";
 
 function UserInput() {
-  const { isSubmitting, mutate: createTicket } = useCreateTicket();
+  const navigate = useNavigate();
+  const { isSubmitting, mutate: createTicket } = useCreateTicket(
+    ({ data: { ticket_id } }) => {
+      navigate(TICKETS_RESPONSE_ROUTE.replace(":ticketId", ticket_id));
+    }
+  );
 
   return (
     <div className="w-full max-w-3xl mx-auto p-6">
