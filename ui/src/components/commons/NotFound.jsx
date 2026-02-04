@@ -7,7 +7,7 @@ import {
   EmptyTitle,
 } from "shadcn/empty";
 import { LogIn } from "lucide-react";
-import { TICKET_ROUTE } from "../routeConstants";
+import { TICKETS_ROUTE } from "../routeConstants";
 
 export function NotFound() {
   return (
@@ -25,11 +25,11 @@ export function NotFound() {
         <EmptyContent>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
-              onClick={() => (window.location.href = TICKET_ROUTE)}
+              onClick={() => (window.location.href = TICKETS_ROUTE)}
               className="flex items-center gap-2 button-primary"
             >
               <LogIn className="size-4" />
-              Go to ticket page
+              Go to tickets page
             </Button>
           </div>
         </EmptyContent>

@@ -6,7 +6,7 @@ import { useCreateUser, useSignInUser } from "hooks/reactQuery/useUsersApi";
 import { setToLocalStorage } from "utils/storage";
 
 import { FORM_INITIAL_VALUES, LOGIN_SCHEMA } from "./constants";
-import { SIGNIN_ROUTE, SIGNUP_ROUTE, TICKET_ROUTE } from "../routeConstants";
+import { SIGNIN_ROUTE, SIGNUP_ROUTE, TICKETS_ROUTE } from "../routeConstants";
 import { useRef } from "react";
 import { useEffect } from "react";
 
@@ -22,7 +22,7 @@ function SignIn() {
   const { isSubmitting: isSigningIn, mutate: signInUser } = useSignInUser(
     ({ data: { api_key } }) => {
       setToLocalStorage("apiKey", api_key);
-      window.location.replace(TICKET_ROUTE);
+      window.location.replace(TICKETS_ROUTE);
     }
   );
 

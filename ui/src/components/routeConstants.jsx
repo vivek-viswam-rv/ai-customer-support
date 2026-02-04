@@ -3,16 +3,18 @@ import NotFound from "./commons/NotFound";
 import { redirect } from "react-router-dom";
 import Ticket from "./Ticket";
 import SignIn from "./SignIn";
+import Response from "./Ticket/Response";
 
 export const HOME_ROUTE = "/";
-export const TICKET_ROUTE = "/ticket";
+export const TICKETS_ROUTE = "/tickets";
+export const TICKETS_RESPONSE_ROUTE = "/tickets/:ticketId";
 export const SIGNIN_ROUTE = "/signin";
 export const SIGNUP_ROUTE = "/signup";
 
 export const ROUTES = [
   {
     path: HOME_ROUTE,
-    loader: () => redirect(TICKET_ROUTE),
+    loader: () => redirect(TICKETS_ROUTE),
   },
   {
     path: SIGNIN_ROUTE,
@@ -23,7 +25,11 @@ export const ROUTES = [
     element: <SignIn />,
   },
   {
-    path: TICKET_ROUTE,
+    path: TICKETS_RESPONSE_ROUTE,
+    element: <Response />,
+  },
+  {
+    path: TICKETS_ROUTE,
     element: <Ticket />,
   },
   {
