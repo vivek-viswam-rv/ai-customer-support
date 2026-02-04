@@ -55,6 +55,8 @@ async def stream_events(request: Request):
 
 
 async def event_generator():
-    for i in "Hello world, How are you doing doing today?":
+    for i in "Hi there! Thanks for checking this out. " \
+    "This is a work in progress system that streams the responses. " \
+    "Right now, this is just a demo stream. I'll be integrating the actual AI response generation soon. Stay tuned!":
         await asyncio.sleep(0.05)
         yield f"data: {i}\n\n"
