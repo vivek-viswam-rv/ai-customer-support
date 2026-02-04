@@ -9,6 +9,11 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+@app.get("/")
+@app.get("/health")
+def read_root():
+    return {"message": "App's healthy!"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[ os.getenv("FRONTEND_URL"), "http://localhost:5173" ],
