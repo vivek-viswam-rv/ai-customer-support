@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "shadcn/button";
 import { TICKETS_ROUTE } from "../routeConstants";
 
-const Problem = ({ problemDescription }) => {
+const Problem = ({ problemDescription, isStreaming }) => {
   const navigate = useNavigate();
 
   return (
@@ -18,6 +18,7 @@ const Problem = ({ problemDescription }) => {
       </div>
       <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
         <Button
+          disabled={isStreaming}
           onClick={() => navigate(TICKETS_ROUTE)}
           className="w-full button-primary"
         >

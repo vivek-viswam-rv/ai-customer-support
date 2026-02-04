@@ -7,6 +7,7 @@ import { useFetchTicket } from "hooks/reactQuery/useTicketsApi";
 import Problem from "./Problem";
 import { STREAM_STATUSES } from "constants";
 import { streamResponse } from "apis/stream";
+import { Button } from "shadcn/button";
 
 export function Response() {
   const [response, setResponse] = useState("");
@@ -14,15 +15,17 @@ export function Response() {
   const [error, setError] = useState(null);
   const eventSourceRef = useRef(null);
 
+  const { ticketId } = useParams();
+  const { isLoading, data, isSuccess } = useFetchTicket(ticketId);
+
+  const isStreaming = status === STREAM_STATUSES.streaming;
+
   const stopStreaming = () => {
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
       setStatus(STREAM_STATUSES.complete);
     }
   };
-
-  const { ticketId } = useParams();
-  const { isLoading, data, isSuccess } = useFetchTicket(ticketId);
 
   useEffect(() => {
     if (!isSuccess) return;
@@ -46,6 +49,7 @@ export function Response() {
   return (
     <div className="flex h-screen gap-6 p-6 bg-gray-50">
       <Problem
+        isStreaming={isStreaming}
         problemDescription={
           data?.data?.description || "Couldn't fetch problem description!"
         }
@@ -54,14 +58,6 @@ export function Response() {
       <div className="flex-1 flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 flex justify-between items-center">
           <h2 className="text-lg font-semibold text-gray-900">AI Response</h2>
-          {status === STREAM_STATUSES.streaming && (
-            <button
-              onClick={stopStreaming}
-              className="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"
-            >
-              Stop
-            </button>
-          )}
         </div>
         <div className="flex-1 overflow-auto p-6">
           {status === STREAM_STATUSES.idle && !response && (
@@ -102,6 +98,16 @@ export function Response() {
               <p className="text-red-700">Error: {error}</p>
             </div>
           )}
+        </div>
+
+        <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
+          <Button
+            disabled={!isStreaming}
+            onClick={stopStreaming}
+            className="button-danger w-full"
+          >
+            Stop AI response
+          </Button>
         </div>
       </div>
     </div>
