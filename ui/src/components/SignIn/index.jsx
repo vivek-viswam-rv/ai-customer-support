@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "shadcn/button";
 import { useCreateUser, useSignInUser } from "hooks/reactQuery/useUsersApi";
-import { setToLocalStorage } from "utils/storage";
+import { getFromLocalStorage, setToLocalStorage } from "utils/storage";
 
 import { FORM_INITIAL_VALUES, LOGIN_SCHEMA } from "./constants";
 import { SIGNIN_ROUTE, SIGNUP_ROUTE, TICKETS_ROUTE } from "../routeConstants";
@@ -12,6 +12,7 @@ import { useEffect } from "react";
 
 function SignIn() {
   const pathname = window.location.pathname;
+  const isSignedIn = getFromLocalStorage("apiKey") ? true : false;
   const isLoginPage = pathname === SIGNIN_ROUTE;
   const loadingText = isLoginPage ? "Signing in..." : "Signing up...";
   const buttonText = isLoginPage ? "Sign in" : "Sign up";
@@ -31,6 +32,10 @@ function SignIn() {
   );
 
   useEffect(() => {
+    if (isSignedIn) {
+      navigate(TICKETS_ROUTE, { replace: true });
+    }
+
     formRef.current?.resetForm();
     emailRef.current?.focus();
   }, [isLoginPage]);
