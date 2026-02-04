@@ -20,6 +20,9 @@
   .button-secondary {
     @apply bg-gray-600 py-2 text-white hover:bg-gray-700;
   }
+  .button-danger {
+    @apply bg-red-600 py-2 text-white hover:bg-red-700;
+  }
 }
 
 .required::after {
