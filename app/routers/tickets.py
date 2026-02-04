@@ -1,6 +1,7 @@
+import asyncio
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -38,3 +39,22 @@ def create_ticket(ticket: TicketCreate,
         "ticket_id": new_ticket.id
         }
 
+@router.get("/{ticket_id}/response")
+async def stream_events(request: Request):
+    async def event_stream():
+        try:
+            async for event in event_generator():
+                if await request.is_disconnected():
+                    break
+                yield event
+            yield "event: done\ndata: Stream completed\n\n"
+        except Exception as e:
+            yield f"event: error\ndata: {str(e)}\n\n"
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+
+
+async def event_generator():
+    for i in "Hello world, How are you doing doing today?":
+        await asyncio.sleep(0.05)
+        yield f"data: {i}\n\n"
