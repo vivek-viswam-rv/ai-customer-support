@@ -10,6 +10,8 @@ from app.models import User, Order
 from app.schemas import OrderStatus, UserCreate, UserSignIn, UserSignInResponse
 from app.auth import verify_password
 
+from .constants import DUMMY_PRODUCTS
+
 router = APIRouter(prefix="/users")
 
 @router.post("", status_code=status.HTTP_201_CREATED)
@@ -39,7 +41,9 @@ def signin_user(user_details: UserSignIn, db: Annotated[Session, Depends(get_db)
 
 def populate_orders(user: User, db: Session):
     db.add_all([
-        Order(user_id=user.id, product_name="Wireless Mouse", status=OrderStatus(status="Delivered").status),
-        Order(user_id=user.id, product_name="Bluetooth Headphones", status=OrderStatus(status="Refunded").status),
-        Order(user_id=user.id, product_name="USB-C Charger", status=OrderStatus(status="Returned").status),
+        Order(
+            user_id=user.id, product_name=product["name"],
+            status=product["status"]
+            )
+        for product in DUMMY_PRODUCTS
     ])
