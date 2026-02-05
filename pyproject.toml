@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 dependencies = [
     "boto3>=1.42.37",
     "fastapi[standard]>=0.128.0",
+    "langchain>=1.2.8",
     "langchain-community>=0.4.1",
     "langchain-openai>=1.1.7",
     "langchain-pinecone>=0.2.13",
