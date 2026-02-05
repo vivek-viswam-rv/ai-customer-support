@@ -10,6 +10,7 @@ dependencies = [
     "langchain-pinecone>=0.2.13",
     "numba>=0.60.0",
     "pinecone>=7.3.0",
+    "psycopg2-binary>=2.9.11",
     "pwdlib[argon2]>=0.3.0",
     "redis>=7.1.0",
     "sqlalchemy>=2.0.46",
