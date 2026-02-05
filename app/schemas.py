@@ -22,7 +22,7 @@ class UserSignInResponse(BaseModel):
     api_key: str
 
 class OrderStatus(BaseModel):
-    status: Literal["Delivered", "Returned", "Refunded"] = "Delivered"
+    status: Literal["delivered", "returned", "refunded"] = "delivered"
 
 class Order(OrderStatus):
     id: int
