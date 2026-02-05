@@ -1,15 +1,19 @@
-import asyncio
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, update
+from langchain.agents import create_agent
+from langchain.messages import HumanMessage
 
 from app.database import get_db
-from app.dependencies import api_authentication
+from app.dependencies import api_authentication, stream_authentication
 from app.models import Ticket, User
 from app.schemas import TicketCreate, TicketResponse
+from app.agentic_tools import TOOLS
+
+from .constants import SYSTEM_PROMPT, MODEL
 
 router = APIRouter(prefix="/tickets")
 
@@ -40,23 +44,37 @@ def create_ticket(ticket: TicketCreate,
         }
 
 @router.get("/{ticket_id}/response")
-async def stream_events(request: Request):
+async def stream_events(request: Request, db: Annotated[Session, Depends(get_db)],
+                        user: Annotated[User, Depends(stream_authentication)], ticket_id: str):
+
+    description = db.execute(select(Ticket.description).where(Ticket.id == ticket_id, Ticket.user_id == user.id)).scalars().first()
+    if not description:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ticket not found!")
+
+    agent = create_agent(
+        model=MODEL,
+        tools=TOOLS,
+        system_prompt= SYSTEM_PROMPT +
+        f"Here's the ticket ID you are working on: {ticket_id}. And the user ID is: {user.id}"
+    )
+
     async def event_stream():
+        response = ""
         try:
-            async for event in event_generator():
+            for token, metadata in agent.stream(
+                {"messages": [HumanMessage(content=description)]},
+                stream_mode="messages"
+            ):
                 if await request.is_disconnected():
                     break
-                yield event
+                if token.content and metadata.get("langgraph_node") != "tools":
+                    response += token.content
+                    yield f"data: {token.content}\n\n"
+
+            db.execute(update(Ticket).where(Ticket.id == ticket_id).values(response=response))
+            db.commit()
+
             yield "event: done\ndata: Stream completed\n\n"
         except Exception as e:
             yield f"event: error\ndata: {str(e)}\n\n"
     return StreamingResponse(event_stream(), media_type="text/event-stream")
-
-
-
-async def event_generator():
-    for i in "Hi there! Thanks for checking this out. " \
-    "This is a work in progress system that streams the responses. " \
-    "Right now, this is just a demo stream. I'll be integrating the actual AI response generation soon. Stay tuned!":
-        await asyncio.sleep(0.05)
-        yield f"data: {i}\n\n"

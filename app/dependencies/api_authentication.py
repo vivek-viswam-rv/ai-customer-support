@@ -12,3 +12,10 @@ async def api_authentication(x_api_key: Annotated[str | None, Header()], db: Ann
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized access!")
 
     return user
+
+async def stream_authentication(api_key: str, db: Annotated[Session, Depends(get_db)]):
+    user = db.execute(select(User).where(User.api_key == api_key)).scalars().first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized access!")
+
+    return user
