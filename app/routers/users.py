@@ -6,13 +6,15 @@ from sqlalchemy.orm import Session
 
 from app.auth import hash_password
 from app.database import get_db
-from app.models import User
-from app.schemas import UserCreate, UserSignIn, UserSignInResponse
+from app.models import User, Order
+from app.schemas import OrderStatus, UserCreate, UserSignIn, UserSignInResponse
 from app.auth import verify_password
+
+from .constants import DUMMY_PRODUCTS
 
 router = APIRouter(prefix="/users")
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Annotated[Session, Depends(get_db)]):
     does_user_exist = db.execute(select(User).where(User.email == user.email).limit(1)).first()
 
@@ -23,6 +25,8 @@ def create_user(user: UserCreate, db: Annotated[Session, Depends(get_db)]):
     new_user = User(email=user.email, password_hash=password_hash)
 
     db.add(new_user)
+    db.flush()
+    populate_orders(new_user, db)
     db.commit()
 
     return {"message": "Sign up successful!"}
@@ -34,3 +38,12 @@ def signin_user(user_details: UserSignIn, db: Annotated[Session, Depends(get_db)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password!")
 
     return UserSignInResponse(email=user.email, api_key=user.api_key)
+
+def populate_orders(user: User, db: Session):
+    db.add_all([
+        Order(
+            user_id=user.id, product_name=product["name"],
+            status=product["status"]
+            )
+        for product in DUMMY_PRODUCTS
+    ])

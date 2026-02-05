@@ -4,14 +4,14 @@ import { getFromLocalStorage } from "utils/storage";
 import { BASE_URL } from "./constants";
 
 export const streamResponse = ({ticketId, setStatus, setError, setResponse, eventSourceRef}) => {
-  const URL = `${BASE_URL}/tickets/${ticketId}/response`;
   const API_KEY = getFromLocalStorage("apiKey");
+  const URL = `${BASE_URL}/tickets/${ticketId}/response?api_key=${API_KEY}`;
 
   setStatus(STREAM_STATUSES.connecting);
   setError(null);
   setResponse("");
 
-  const eventSource = new EventSource(URL, { headers: { "X-Api-Key": API_KEY } });
+  const eventSource = new EventSource(URL);
 
   eventSourceRef.current = eventSource;
 

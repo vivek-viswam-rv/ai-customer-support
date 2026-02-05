@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -20,3 +20,14 @@ class UserSignIn(UserCreate):
 class UserSignInResponse(BaseModel):
     email: EmailStr
     api_key: str
+
+class OrderStatus(BaseModel):
+    status: Literal["delivered", "returned", "refunded"] = "delivered"
+
+class Order(OrderStatus):
+    id: int
+    product_name: str
+    user_id: str
+
+class OrderHistory(OrderStatus):
+    order_id: str
