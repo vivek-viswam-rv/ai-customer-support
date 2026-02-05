@@ -25,7 +25,7 @@ def get_ticket(ticket_id, db: Annotated[Session, Depends(get_db)], user: Annotat
         "user_id": ticket.user_id
     }
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def create_ticket(ticket: TicketCreate,
                   db: Annotated[Session, Depends(get_db)],
                   user: Annotated[User, Depends(api_authentication)]):

@@ -12,7 +12,7 @@ from app.auth import verify_password
 
 router = APIRouter(prefix="/users")
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Annotated[Session, Depends(get_db)]):
     does_user_exist = db.execute(select(User).where(User.email == user.email).limit(1)).first()
 
