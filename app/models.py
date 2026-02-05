@@ -26,6 +26,7 @@ class Ticket(BaseModel):
     __tablename__ = "tickets"
 
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
+    response: Mapped[str] = mapped_column(String(2000), nullable=True)
     user_id: Mapped[str] = mapped_column(
         ForeignKey("users.id"),
         nullable=False
@@ -37,7 +38,7 @@ class Order(BaseModel):
     __tablename__ = "orders"
 
     product_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    status: Mapped[str] = mapped_column(String(60), nullable=False, default="Delivered")
+    status: Mapped[str] = mapped_column(String(60), nullable=False, default="delivered")
     user_id: Mapped[str] = mapped_column(
         ForeignKey("users.id"),
         nullable=False
@@ -49,7 +50,7 @@ class Order(BaseModel):
 class OrderHistory(BaseModel):
     __tablename__ = "order_history"
 
-    status: Mapped[str] = mapped_column(String(60), nullable=False, default="Delivered")
+    status: Mapped[str] = mapped_column(String(60), nullable=False, default="delivered")
     order_id: Mapped[str] = mapped_column(
         ForeignKey("orders.id"),
         nullable=False
