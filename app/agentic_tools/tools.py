@@ -3,6 +3,15 @@ from langchain.tools import tool
 from app.database import get_db
 from app.models import Order, OrderHistory
 
+from langchain_openai import OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
+
+from .utils import get_pinecone_index
+
+EMBEDDING_MODEL = "text-embedding-3-small"
+PINECONE_DIM = 1536
+PINECONE_METRIC = "cosine"
+
 @tool
 def get_all_orders_of_user(user_id: str) -> str:
     """Fetches all orders for a given user ID."""
@@ -48,12 +57,27 @@ def return_or_refund(order_id: str, action: str) -> str:
 
         return f"Order {order_id} status changed to {action}."
     else:
-        print("Order not found")
         return f"Order with ID {order_id} not found."
+
+@tool
+def retrieve_return_refund_policy_context(query: str) -> str:
+    """Retrieves relevant context from Pinecone vector store that contains returns and refunds policy based on the query."""
+    index = get_pinecone_index()
+    embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
+    vector_store = PineconeVectorStore(index=index, embedding=embeddings)
+
+    retrieved_docs = vector_store.similarity_search(query, k=2)
+    serialized = "\n\n".join(
+        (f"Source: {doc.metadata}\nContent: {doc.page_content}")
+        for doc in retrieved_docs
+    )
+
+    return serialized, retrieved_docs
 
 TOOLS = [
     get_all_orders_of_user,
     get_current_order_status,
     get_track_of_events_happened_to_order,
     return_or_refund,
+    retrieve_return_refund_policy_context
 ]

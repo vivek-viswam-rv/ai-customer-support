@@ -1,0 +1,6 @@
+Refunds can be allowed if the order was returned.
+Delivered items cannot be refunded and returned items will not be delivered again, the customer must reorder the item.
+Once a refund has been issued, the customer shouldn't be refunded for the same item.
+The only possible flow of order status is 'delivered' -> 'returned' -> 'refunded'.
+Returns are allowed in the event of product damage only.
+If a customer requests for the return of a product, ensure that the case meets the return criteria.
