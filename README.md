@@ -104,12 +104,12 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 - Frontend UI
 - Support ticket creation and retrieval
 - Order management models and endpoints
-- Agentic tools for order history, refund, and return
+- Agentic tools for order tracking, refund, return and Pinecone RAG
 - Streaming LLM responses for ticket queries using OpenAI model
 
 ### 🚀 In Progress
 
-- RAG policy integration
+- Handling very large policy documents.
 
 ## License
 
