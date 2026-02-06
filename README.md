@@ -30,12 +30,12 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 
 - **FastAPI** - High-performance async API framework
 - **SQLAlchemy** - ORM for database operations
-- **Redis** - Rate limiting and caching
+- **Amazon ElastiCache (Redis)** - Rate limiting and caching
 - **LangChain** - LLM orchestration
 - **Pinecone** - Vector database for RAG
 - **Amazon S3** - Document storage
 - **Amazon RDS** - Database
-- **Amazon ECS & Load Balancer** - Backend server
+- **Amazon ECS & Elastic Load Balancing (ELS)** - Backend server
 - **pwlib[argon2]** - Password hashing
 - **SSE Event Streaming** - AI response streaming
 
