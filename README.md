@@ -13,9 +13,7 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 
 ## Table of Contents
 
-- [Features](#features)
 - [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -24,26 +22,23 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 - [Contributing](#contributing)
 - [License](#license)
 
-## Features
-
-- 🔐 **Authentication** - Secure API authentication
-- ⚡ **Rate Limiting** - Sliding-window, counter-based API rate limiter with Redis
-- 📄 **RAG Pipeline** - Retrieval-Augmented Generation for policy-based responses
-- 🤖 **LLM Integration** - LangChain-powered intelligent responses
-- 📧 **Email Actions** - Automated email responses
-- 🌐 **UI** - React-based responsive interface
-
 ## Architecture
 
 ### Backend
+
 - **FastAPI** - High-performance async API framework
 - **SQLAlchemy** - ORM for database operations
 - **Redis** - Rate limiting and caching
 - **LangChain** - LLM orchestration
 - **Pinecone** - Vector database for RAG
-- **AWS S3** - Document storage
+- **Amazon S3** - Document storage
+- **Amazon RDS** - Database
+- **Amazon ECS & Load Balancer** - Backend server
+- **pwlib[argon2]** - Password hashing
+- **SSE Event Streaming** - AI response streaming
 
 ### Frontend
+
 - **React 19** - UI framework
 - **Tailwind CSS** - Utility-first CSS
 - **Shadcn/ui** - Component library
@@ -51,14 +46,6 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 - **Ramda** - Functional library of JavaScript
 - **TanStack Query (React Query)** - Data fetching
 - **Formik & Yup** - Form management and validation
-
-## Tech Stack
-
-- **Backend**: FastAPI, SQLAlchemy, LangChain
-- **Frontend**: React, Tailwind CSS, Shadcn/ui, Axios, Ramda
-- **Database**: Redis, Pinecone
-- **Cloud**: AWS S3
-- **LLM**: OpenAI
 
 ## Getting Started
 
@@ -74,12 +61,14 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/vivek-viswam-rv/ai-customer-support.git
    cd ai-customer-support
    ```
 
 2. **Backend Setup**
+
    ```bash
    # Install dependencies with uv
    uv sync
@@ -90,11 +79,13 @@ An LLM-powered customer support agent designed to automate the handling of suppo
    ```
 
 3. **Frontend Setup**
+
    ```bash
    pnpm install
    ```
 
 4. **Run the application**
+
    ```bash
    # Backend
    uv run uvicorn app.main:app --reload
@@ -106,18 +97,19 @@ An LLM-powered customer support agent designed to automate the handling of suppo
 ## Project Status
 
 ### ✅ Completed
+
 - Authentication dependency implementation
 - Sliding-window, counter-based API rate limiter with Redis
-- Policy reindexing endpoint
-- AWS S3 connectivity testing
-- FastAPI → S3 → Pinecone pipeline validation
-- Frontend UI components (Login, 404)
+- Policy reindexing on Amazon Lambda
+- Frontend UI
+- Support ticket creation and retrieval
+- Order management models and endpoints
+- Agentic tools for order history, refund, and return
+- Streaming LLM responses for ticket queries using OpenAI model
 
 ### 🚀 In Progress
-- Move reindexing to AWS Lambda (microservice)
-- LLM response generation
-- Email action automation
 
+- RAG policy integration
 
 ## License
 
