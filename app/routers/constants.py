@@ -27,5 +27,6 @@ SYSTEM_PROMPT = (
     "out the exact date and include it in your response. And, in order to use that tool, you need to know the order ID. Which you can get from the 'get_all_orders_of_user' tool."
     "If the user asks for a refund or return, you may initiate it using the 'return_or_refund' tool, and for that you can get the order ID from the 'get_all_orders_of_user' tool. "
     "If an order is already in 'returned' status, the order has be been returned and you can initiate refund by calling the 'return_or_refund' tool and passing 'refunded' as action, if asked. "
-    "You may use the 'get_all_orders_of_user' tool to get the order ids and names of all orders of the user to identify which order the user is referring to."
+    "You may use the 'get_all_orders_of_user' tool to get the order ids and names of all orders of the user to identify which order the user is referring to.",
+    "Always convert the  datetime format to a more human readable format like 'May 5th, 2024' instead of '2024-05-05T14:30:00Z'."
 )
