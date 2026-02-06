@@ -20,8 +20,6 @@ An LLM-powered customer support agent designed to automate the handling of suppo
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Project Status](#project-status)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Architecture
