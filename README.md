@@ -9,6 +9,8 @@
 
 ## Overview
 
+**App demo**: https://ai-customer-support-vivek.vercel.app/
+
 An LLM-powered customer support agent designed to automate the handling of support tickets and execute actions such as updating refund status and sending response emails based on policy documents. Uses LangChain and Retrieval-Augmented Generation (RAG) with Pinecone to ground responses.
 
 ## Table of Contents
