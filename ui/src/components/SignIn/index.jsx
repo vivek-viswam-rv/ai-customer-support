@@ -9,6 +9,8 @@ import { FORM_INITIAL_VALUES, LOGIN_SCHEMA } from "./constants";
 import { SIGNIN_ROUTE, SIGNUP_ROUTE, TICKETS_ROUTE } from "../routeConstants";
 import { useRef } from "react";
 import { useEffect } from "react";
+import { Checkbox } from "shadcn/checkbox";
+import { useState } from "react";
 
 function SignIn() {
   const pathname = window.location.pathname;
@@ -16,6 +18,8 @@ function SignIn() {
   const isLoginPage = pathname === SIGNIN_ROUTE;
   const loadingText = isLoginPage ? "Signing in..." : "Signing up...";
   const buttonText = isLoginPage ? "Sign in" : "Sign up";
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const formRef = useRef();
   const emailRef = useRef();
@@ -57,7 +61,7 @@ function SignIn() {
         >
           {({ errors, touched }) => (
             <Form>
-              <div className="space-y-1.5 mb-2">
+              <div className="mb-1">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 required"
@@ -77,7 +81,7 @@ function SignIn() {
                     }`}
                     placeholder="you@example.com"
                   />
-                  <div className="mt-1 text-error">
+                  <div className="text-error">
                     {touched.email && errors.email}
                   </div>
                 </div>
@@ -88,11 +92,11 @@ function SignIn() {
                 >
                   Password
                 </label>
-                <div className="h-16">
+                <div className="h-22">
                   <Field
                     id="password"
                     name="password"
-                    type="password"
+                    type={isPasswordVisible ? "text" : "password"}
                     className={`mt-1 block w-full rounded-lg border px-4 py-2 text-gray-900 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
                       touched.password && errors.password
                         ? "border-red-500"
@@ -100,8 +104,23 @@ function SignIn() {
                     }`}
                     placeholder="Password"
                   />
-                  <div className="mt-1 text-error">
-                    {touched.password && errors.password}
+                  <div>
+                    <Checkbox
+                      value={isPasswordVisible}
+                      checked={isPasswordVisible}
+                      onCheckedChange={(checked) =>
+                        setIsPasswordVisible(checked)
+                      }
+                      className="mt-2"
+                      id="showPassword"
+                      name="showPassword"
+                    />
+                    <label className="ml-1.5 text-sm" htmlFor="showPassword">
+                      Show password
+                    </label>
+                    <div className="text-error">
+                      {touched.password && errors.password}
+                    </div>
                   </div>
                 </div>
               </div>
