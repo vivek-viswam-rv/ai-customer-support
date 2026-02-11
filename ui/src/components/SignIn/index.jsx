@@ -24,14 +24,14 @@ function SignIn() {
   const formRef = useRef();
   const emailRef = useRef();
   const navigate = useNavigate();
-  const { isSubmitting: isSigningIn, mutate: signInUser } = useSignInUser(
+  const { isPending: isSigningIn, mutate: signInUser } = useSignInUser(
     ({ data: { api_key } }) => {
       setToLocalStorage("apiKey", api_key);
       window.location.replace(TICKETS_ROUTE);
     }
   );
 
-  const { isSubmitting: isSigningUp, mutate: signUpUser } = useCreateUser(() =>
+  const { isPending: isSigningUp, mutate: signUpUser } = useCreateUser(() =>
     navigate(SIGNIN_ROUTE, { replace: true })
   );
 
