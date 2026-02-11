@@ -13,7 +13,7 @@ import { TICKETS_RESPONSE_ROUTE } from "../routeConstants";
 
 function UserInput() {
   const navigate = useNavigate();
-  const { isSubmitting, mutate: createTicket } = useCreateTicket(
+  const { isPending: isSubmitting, mutate: createTicket } = useCreateTicket(
     ({ data: { ticket_id } }) => {
       navigate(TICKETS_RESPONSE_ROUTE.replace(":ticketId", ticket_id));
     }
