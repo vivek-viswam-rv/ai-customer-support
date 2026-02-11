@@ -40,6 +40,7 @@ function SignIn() {
       navigate(TICKETS_ROUTE, { replace: true });
     }
 
+    setIsPasswordVisible(false);
     formRef.current?.resetForm();
     emailRef.current?.focus();
   }, [isLoginPage]);
