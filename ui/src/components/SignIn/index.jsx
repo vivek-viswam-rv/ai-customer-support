@@ -46,7 +46,7 @@ function SignIn() {
   }, [isLoginPage]);
 
   return (
-    <div className="flex min-h-svh items-center justify-center bg-standard px-4">
+    <div className="flex min-h-full items-center justify-center bg-standard px-4">
       <div className="w-full max-w-md space-y-4 rounded-lg bg-white p-10 shadow-lg">
         <h1 className="text-3xl font-bold text-gray-900 mb-1">{buttonText}</h1>
         <p className="text-gray-600">

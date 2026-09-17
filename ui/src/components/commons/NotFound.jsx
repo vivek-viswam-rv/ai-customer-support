@@ -11,7 +11,7 @@ import { TICKETS_ROUTE } from "../routeConstants";
 
 export function NotFound() {
   return (
-    <div className="flex min-h-svh items-center justify-center bg-standard px-4">
+    <div className="flex min-h-full items-center justify-center bg-standard px-4">
       <Empty className="border-0">
         <EmptyHeader>
           <div className="text-8xl font-bold text-white">404</div>

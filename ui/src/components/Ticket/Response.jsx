@@ -40,14 +40,14 @@ export function Response() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-full items-center justify-center">
         <Loader2 className="size-6 animate-spin text-gray-500" />
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen gap-6 p-6 bg-gray-50">
+    <div className="flex h-full gap-6 p-6 bg-gray-50">
       <Problem
         isStreaming={isStreaming}
         problemDescription={
