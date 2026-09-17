@@ -163,10 +163,6 @@ Python dependencies are installed from `pyproject.toml`/`uv.lock`. The packages 
 - Agentic tools for order tracking, refund, return and Pinecone RAG
 - Streaming LLM responses for ticket queries using OpenAI model
 
-### 🚀 In Progress
-
-- Handling very large policy documents.
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
