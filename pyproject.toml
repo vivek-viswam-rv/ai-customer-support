@@ -3,20 +3,24 @@ name = "ai-customer-support"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
-    "boto3>=1.42.37",
     "fastapi[standard]>=0.128.0",
     "langchain>=1.2.8",
-    "langchain-community>=0.4.1",
     "langchain-openai>=1.1.7",
     "langchain-pinecone>=0.2.13",
-    "numba>=0.60.0",
     "pinecone>=7.3.0",
     "psycopg2-binary>=2.9.11",
     "pwdlib[argon2]>=0.3.0",
     "redis>=7.1.0",
     "sqlalchemy>=2.0.46",
-    "unstructured",
 ]
 
 [project.scripts]
 app = "app.main:app"
+
+[dependency-groups]
+lambda = [
+    "boto3>=1.42.37",
+    "langchain-community>=0.4.1",
+    "numba>=0.60.0",
+    "unstructured",
+]
