@@ -11,12 +11,13 @@ app = FastAPI()
 
 @app.get("/")
 @app.get("/health")
+@app.get("/api/health")
 def read_root():
     return {"message": "App's healthy!"}
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[ os.getenv("FRONTEND_URL"), "http://localhost:5173" ],
+    allow_origins=[origin for origin in [os.getenv("FRONTEND_URL"), "http://localhost:5173"] if origin],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

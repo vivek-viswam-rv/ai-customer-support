@@ -18,4 +18,9 @@ export default defineConfig({
       "constants": path.resolve(__dirname, "./ui/src/constants"),
     },
   },
+  server: {
+    proxy: {
+      "/api": "http://localhost:8000",
+    },
+  },
 });
