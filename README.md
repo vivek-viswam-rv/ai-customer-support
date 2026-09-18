@@ -6,34 +6,50 @@ A customer support agent that handles support tickets on its own. A user describ
 
 Built with FastAPI, LangChain and React. The policy document is embedded into Pinecone, and the agent pulls the relevant parts of it while answering (RAG).
 
-## How it's hosted
-
-The whole thing runs on Vercel, with Supabase as the database.
-
-- The React frontend is served as static files.
-- The FastAPI backend runs as a Python function (`api/index.py`). Requests to `/api/*` go there, everything else goes to the frontend.
-- Supabase Postgres is used through its connection pooler. SQLAlchemy pooling is turned off since the function is serverless.
-- Policy reindexing still happens on AWS: uploading a new policy file to S3 triggers a Lambda (`lambda/reindexer.py`) that embeds it into Pinecone.
-
-### Earlier setup on AWS
-
-The project was originally deployed on AWS:
-
-- ECS behind a load balancer for the backend (see `Dockerfile`)
-- RDS for Postgres
-- ElastiCache (Redis) for API rate limiting
-- S3 + Lambda for policy reindexing
-- Vercel for the frontend only
-
-That was overkill for a demo. ECS, the load balancer, RDS and ElastiCache all bill by the hour whether or not anyone is using the app, so I moved it to Vercel and Supabase to cut costs. The backend spent some time on Render in between.
-
-The Redis rate limiter (`app/dependencies/rate_limiter.py`) is still in the code but isn't attached to any route now that there's no Redis. Set `REDIS_HOST`/`REDIS_PORT` and add `Depends(rate_limiter)` to the routes to bring it back.
-
 ## Stack
 
-Backend: FastAPI, SQLAlchemy, LangChain, OpenAI, Pinecone, pwdlib (argon2), SSE for streaming.
+### Backend
 
-Frontend: React 19, Vite, Tailwind CSS, shadcn/ui, TanStack Query, Axios, Formik + Yup, Ramda.
+| Tool | Used for |
+|---|---|
+| FastAPI | API framework |
+| SQLAlchemy | ORM |
+| LangChain | Agent and tool orchestration |
+| OpenAI | LLM (`gpt-5-nano`) and embeddings (`text-embedding-3-small`) |
+| Pinecone | Vector database for the policy document (RAG) |
+| pwdlib (argon2) | Password hashing |
+| SSE | Streaming the agent's reply to the browser |
+
+### Frontend
+
+| Tool | Used for |
+|---|---|
+| React 19 + Vite | UI |
+| Tailwind CSS + shadcn/ui | Styling and components |
+| TanStack Query + Axios | Data fetching |
+| Formik + Yup | Forms and validation |
+| Ramda | Utility functions |
+
+## Infrastructure
+
+The project was originally deployed on AWS. That was overkill for a demo: ECS, the load balancer, RDS and ElastiCache all bill by the hour whether or not anyone is using the app. To cut costs the backend was moved to Render for a while, and now everything runs on Vercel with Supabase as the database.
+
+| | Originally (AWS) | Now |
+|---|---|---|
+| Backend | ECS + Elastic Load Balancing, Dockerised FastAPI (see `Dockerfile`) | Vercel Python function (`api/index.py`) |
+| Frontend | Vercel | Vercel, same project as the backend |
+| Database | Amazon RDS (Postgres) | Supabase (Postgres) |
+| Rate limiting | ElastiCache (Redis) | None, see note below |
+| Policy document storage | Amazon S3 | Amazon S3 |
+| Policy reindexing | AWS Lambda | AWS Lambda |
+| Vector database | Pinecone | Pinecone |
+
+How the current setup works:
+
+- Requests to `/api/*` go to the FastAPI function, everything else is served from the static React build (`vercel.json`).
+- Supabase is used through its connection pooler. SQLAlchemy pooling is turned off since the function is serverless.
+- Uploading a new policy file to S3 triggers the Lambda (`lambda/reindexer.py`), which embeds it into Pinecone. S3 and Lambda are pay-per-use and cost almost nothing at this scale, so they stayed on AWS.
+- The Redis rate limiter (`app/dependencies/rate_limiter.py`) is still in the code but isn't attached to any route now that there's no Redis. Set `REDIS_HOST`/`REDIS_PORT` and add `Depends(rate_limiter)` to the routes to bring it back.
 
 ## Running locally
 
