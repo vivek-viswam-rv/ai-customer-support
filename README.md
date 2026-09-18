@@ -1,168 +1,71 @@
-# AI-Powered Customer Support
+# AI Customer Support
 
-[![Status: WIP](https://img.shields.io/badge/Status-Work%20in%20Progress-yellow)]()
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Node 18+](https://img.shields.io/badge/node-18+-green.svg)](https://nodejs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-19+-61DAFB.svg)](https://react.dev/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Demo: https://ai-customer-support-vivek.vercel.app/
 
-## Overview
+A customer support agent that handles support tickets on its own. A user describes their problem, and the agent looks up their orders, checks the [return and refund policy](/refund_return_policy.txt), and if needed updates the order (return or refund). The reply is streamed back to the user as it's generated.
 
-**App demo**: https://ai-customer-support-vivek.vercel.app/
+Built with FastAPI, LangChain and React. The policy document is embedded into Pinecone, and the agent pulls the relevant parts of it while answering (RAG).
 
-**The app now runs entirely on Vercel (frontend + backend) with Supabase as the database. It was originally built and deployed on AWS; the move was made to cut infrastructure costs. See [Architecture](#architecture) for both setups.**
+## How it's hosted
 
-An LLM-powered customer support agent designed to automate the handling of support tickets and execute actions such as updating refund status and sending response emails based on policy document. Uses LangChain and Retrieval-Augmented Generation (RAG) with Pinecone to ground responses.
+The whole thing runs on Vercel, with Supabase as the database.
 
-[Link to the policy document](/refund_return_policy.txt).
+- The React frontend is served as static files.
+- The FastAPI backend runs as a Python function (`api/index.py`). Requests to `/api/*` go there, everything else goes to the frontend.
+- Supabase Postgres is used through its connection pooler. SQLAlchemy pooling is turned off since the function is serverless.
+- Policy reindexing still happens on AWS: uploading a new policy file to S3 triggers a Lambda (`lambda/reindexer.py`) that embeds it into Pinecone.
 
-## Table of Contents
+### Earlier setup on AWS
 
-- [Architecture](#architecture)
-  - [Current architecture (cost-optimised)](#current-architecture-cost-optimised)
-  - [Previous architecture (AWS)](#previous-architecture-aws)
-  - [Frontend](#frontend)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Deployment](#deployment)
-- [Project Status](#project-status)
-- [License](#license)
+The project was originally deployed on AWS:
 
-## Architecture
+- ECS behind a load balancer for the backend (see `Dockerfile`)
+- RDS for Postgres
+- ElastiCache (Redis) for API rate limiting
+- S3 + Lambda for policy reindexing
+- Vercel for the frontend only
 
-The application code (FastAPI, SQLAlchemy, LangChain, Pinecone RAG, SSE streaming) is the same in both setups. What changed is where it runs.
+That was overkill for a demo. ECS, the load balancer, RDS and ElastiCache all bill by the hour whether or not anyone is using the app, so I moved it to Vercel and Supabase to cut costs. The backend spent some time on Render in between.
 
-### Current architecture (cost-optimised)
+The Redis rate limiter (`app/dependencies/rate_limiter.py`) is still in the code but isn't attached to any route now that there's no Redis. Set `REDIS_HOST`/`REDIS_PORT` and add `Depends(rate_limiter)` to the routes to bring it back.
 
-The AWS setup below was reliable but expensive to keep running for a demo project (always-on ECS tasks, a load balancer, RDS and ElastiCache all bill by the hour). As a cost-cutting measure the backend was first moved to render.com, and is now consolidated onto Vercel and Supabase, both of which have usage-based free tiers.
+## Stack
 
-- **Vercel** - Hosts both the frontend and the backend in a single project
-  - The Vite build (`ui/dist`) is served as static files from Vercel's CDN
-  - The FastAPI app runs as a single Python Vercel Function (`api/index.py`), and every `/api/*` request is rewritten to it (see `vercel.json`)
-  - Frontend and backend share an origin, so no CORS setup or API URL is needed in production
-- **Supabase (Postgres)** - Database, replacing Amazon RDS
-  - Accessed through SQLAlchemy using Supabase's transaction pooler (Supavisor, port `6543`)
-  - The SQLAlchemy engine uses `NullPool`, since serverless function instances shouldn't hold their own connection pools
-- **FastAPI** - High-performance async API framework
-- **SQLAlchemy** - ORM for database operations
-- **LangChain** - LLM orchestration
-- **Pinecone** - Vector database for RAG
-- **pwlib[argon2]** - Password hashing
-- **SSE Event Streaming** - AI response streaming (Vercel's Python runtime streams responses)
-- **Amazon S3 + AWS Lambda** - Still used for policy reindexing. Uploading a policy document to the S3 bucket triggers `lambda/reindexer.py`, which embeds it into Pinecone. Both are pay-per-use and cost practically nothing at this scale, so they were not moved.
-- **Redis rate limiter** - The rate limiter dependency (`app/dependencies/rate_limiter.py`) is still in the codebase, but it is not attached to any route at the moment since ElastiCache was retired. To bring it back, point `REDIS_HOST`/`REDIS_PORT` at any hosted Redis and add `Depends(rate_limiter)` to the routes.
+Backend: FastAPI, SQLAlchemy, LangChain, OpenAI, Pinecone, pwdlib (argon2), SSE for streaming.
 
-### Previous architecture (AWS)
+Frontend: React 19, Vite, Tailwind CSS, shadcn/ui, TanStack Query, Axios, Formik + Yup, Ramda.
 
-This is how the project was originally built and deployed. The `Dockerfile` in the repo is from this setup and still works for container-based hosting.
+## Running locally
 
-- **Amazon ECS & Elastic Load Balancing (ELB)** - Backend server (Dockerised FastAPI app)
-- **Amazon RDS** - Postgres database
-- **Amazon ElastiCache (Redis)** - Counter-based API rate limiting
-- **Amazon S3** - Policy document storage
-- **AWS Lambda** - Policy reindexing into Pinecone on S3 upload
-- **Pinecone** - Vector database for RAG
-- **Vercel** - Frontend only
+You need Python 3.12+, [uv](https://docs.astral.sh/uv/), Node 18+ and pnpm, plus a Postgres database, an OpenAI API key and a Pinecone account.
 
-### Frontend
+```bash
+git clone https://github.com/vivek-viswam-rv/ai-customer-support.git
+cd ai-customer-support
 
-- **React 19** - UI framework
-- **Tailwind CSS** - Utility-first CSS
-- **Shadcn/ui** - Component library
-- **Axios** - API requests
-- **Ramda** - Functional library of JavaScript
-- **TanStack Query (React Query)** - Data fetching
-- **Formik & Yup** - Form management and validation
+uv sync
+pnpm install
 
-## Getting Started
+cp env.sample .env   # fill in the values
+```
 
-### Prerequisites
+Then in two terminals:
 
-- Python 3.9 or higher
-- Node.js 18 or higher
-- [uv](https://docs.astral.sh/uv/) - Python package manager
-- A Postgres database ([Supabase](https://supabase.com/) project, or a local Postgres for development)
-- Pinecone account
-- OpenAI API key
-- AWS account (only for the S3 + Lambda policy reindexer)
-- Redis server (optional, only if you re-enable the rate limiter)
+```bash
+uv run uvicorn app.main:app --reload   # backend on :8000
+pnpm dev                               # frontend on :5173
+```
 
-### Installation
+The Vite dev server proxies `/api` to the backend, so no extra config is needed.
 
-1. **Clone the repository**
+The Lambda's dependencies aren't installed by default. Run `uv sync --group lambda` if you want to work on it.
 
-   ```bash
-   git clone https://github.com/vivek-viswam-rv/ai-customer-support.git
-   cd ai-customer-support
-   ```
+## Deploying
 
-2. **Backend Setup**
+Supabase: create a project, and use the **Transaction pooler** connection string (port 6543) as `DATABASE_URL`. Tables are created on first start. Since the tables end up in the `public` schema, disable the Data API in the project settings (or turn on RLS) so they aren't exposed through Supabase's REST API.
 
-   ```bash
-   # Install dependencies with uv
-   uv sync
-
-   # Configure environment
-   cp env.sample .env
-   # Edit .env with your configuration
-   ```
-
-3. **Frontend Setup**
-
-   ```bash
-   pnpm install
-   ```
-
-4. **Run the application**
-
-   ```bash
-   # Backend (http://localhost:8000)
-   uv run uvicorn app.main:app --reload
-
-   # Frontend (in another terminal, http://localhost:5173)
-   pnpm dev
-   ```
-
-   The Vite dev server proxies `/api` to `http://localhost:8000`, so the frontend talks to the backend on the same origin just like it does on Vercel. Set `VITE_API_URL` only if the backend lives on a different origin.
-
-## Deployment
-
-### Supabase
-
-1. Create a Supabase project.
-2. Open **Connect** and copy the **Transaction pooler** connection string (port `6543`). It looks like:
-
-   ```
-   postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres
-   ```
-
-3. Use it as `DATABASE_URL`. Tables are created automatically on startup (`Base.metadata.create_all`).
-4. The app only talks to Supabase as a plain Postgres database. Since the tables live in the `public` schema, either disable the Supabase Data API (**Project Settings → API**) or enable Row Level Security on the tables, so they aren't exposed through Supabase's auto-generated REST API.
-
-### Vercel
-
-1. Import the repository as a Vercel project. `vercel.json` already sets the framework (Vite), the output directory (`ui/dist`), the Python function config and the rewrites.
-2. Add the environment variables: `OPENAI_API_KEY`, `PINECONE_API_KEY`, `PINECONE_INDEX`, `PINECONE_CLOUD`, `PINECONE_REGION` and `DATABASE_URL`. `VITE_API_URL` and `FRONTEND_URL` can be left unset because both halves share an origin.
-3. Deploy. `GET /api/health` should respond with `App's healthy!`.
-
-Python dependencies are installed from `pyproject.toml`/`uv.lock`. The packages needed only by the Lambda reindexer are kept in the `lambda` dependency group so that they stay out of the Vercel function bundle (`uv sync --group lambda` installs them locally).
-
-## Project Status
-
-### ✅ Completed
-
-- Authentication dependency implementation
-- Counter-based API rate limiter with Redis (currently not attached to routes, see [Architecture](#current-architecture-cost-optimised))
-- Migration from AWS (ECS, RDS, ElastiCache) to Vercel + Supabase to cut infrastructure costs
-- Policy reindexing on Amazon Lambda
-- Frontend UI
-- Support ticket creation and retrieval
-- Order management models and endpoints
-- Agentic tools for order tracking, refund, return and Pinecone RAG
-- Streaming LLM responses for ticket queries using OpenAI model
+Vercel: import the repo and set `DATABASE_URL`, `OPENAI_API_KEY`, `PINECONE_API_KEY`, `PINECONE_INDEX`, `PINECONE_CLOUD` and `PINECONE_REGION`. `vercel.json` takes care of the build and routing. `/api/health` should respond once it's up.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT, see [LICENSE](/LICENSE).
