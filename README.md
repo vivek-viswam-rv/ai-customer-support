@@ -39,17 +39,10 @@ The project was originally deployed on AWS. That was overkill for a demo: ECS, t
 | Backend | ECS + Elastic Load Balancing, Dockerised FastAPI (see `Dockerfile`) | Vercel Python function (`api/index.py`) |
 | Frontend | Vercel | Vercel, same project as the backend |
 | Database | Amazon RDS (Postgres) | Supabase (Postgres) |
-| Rate limiting | ElastiCache (Redis) | None, see note below |
+| Rate limiting | ElastiCache (Redis) | None |
 | Policy document storage | Amazon S3 | Amazon S3 |
 | Policy reindexing | AWS Lambda | AWS Lambda |
 | Vector database | Pinecone | Pinecone |
-
-How the current setup works:
-
-- Requests to `/api/*` go to the FastAPI function, everything else is served from the static React build (`vercel.json`).
-- Supabase is used through its connection pooler. SQLAlchemy pooling is turned off since the function is serverless.
-- Uploading a new policy file to S3 triggers the Lambda (`lambda/reindexer.py`), which embeds it into Pinecone. S3 and Lambda are pay-per-use and cost almost nothing at this scale, so they stayed on AWS.
-- The Redis rate limiter (`app/dependencies/rate_limiter.py`) is still in the code but isn't attached to any route now that there's no Redis. Set `REDIS_HOST`/`REDIS_PORT` and add `Depends(rate_limiter)` to the routes to bring it back.
 
 ## Running locally
 
