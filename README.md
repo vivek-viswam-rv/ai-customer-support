@@ -2,7 +2,7 @@
 
 Demo: https://ai-customer-support-vivek.vercel.app/
 
-A customer support agent that handles support tickets on its own. A user describes their problem, and the agent looks up their orders, checks the [return and refund policy](/refund_return_policy.txt), and if needed updates the order (return or refund). The reply is streamed back to the user as it's generated.
+A customer support agent that handles support tickets on its own. A user describes their problem, and the agent looks up their orders, checks the [return and refund policy](/refund_return_policy.txt), and if needed updates the order (return or refund). The reply is streamed back to the user as it's generated using Server-Sent Events (SSE).
 
 Built with FastAPI, LangChain and React. The policy document is embedded into Pinecone, and the agent pulls the relevant parts of it while answering (RAG).
 
